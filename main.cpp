@@ -1,25 +1,43 @@
-#include <iostream>
+#include <stdio.h>
+#include <functional>
 
- template<typename t>                           //какой тип данных будет храниться
-class array                                     //описание класса
+ template<typename t>
+class array
 {
-    t*self;                                     //указатель на динамический массив
-    size_t size;                                //размер массива
+protected:
+ t*self;
+ size_t size;
 public:
-      template<class...init>                    //переменное число параметров для конструктора
-     array(init...args):                        //конструктор с переменным числом параметров
-        self(new t[sizeof...(init)]{args...}),  //параметры раскрываются и инициализируют выделенный массив
-        size(sizeof...(init))                   //происходит подсчет аргументов и это число записывается как размер
-    {}                                          //в конструкторе произошла только инициализация
-    ~array()                                    //далее сразу деструктор
-    {delete[]self;}                             //он удаляет массив
+	array(const size_t size)
+	:
+		size(size),
+		self(new t[size])
+	{}
+	 template<class...init>
+	array(init...args)
+	:
+		size(sizeof...(args)),
+		self(new t[size]{args...})
+	{}
+	array(const array&a)
+	:
+		size(a.self),
+		self(a.size)
+	{}
 
-    void out()const                             //вывести содержимое массива в консоль
-    {                                           //функция const потому что ничего не изменяет
-        for(size_t i=0;i<size;i++)              //перебор по массиву (по порядку)
-            std::cout<<i<<':'<<self[i]<<std::endl;
-    }                                           //вывод номера и значения элемента
+	 inline
+	t&operator[](const size_t id)
+	{if(id<size)return self[id];else exit(1);}
+
+	void operator()(std::function<void(t&e)>f)
+	{for(size_t i=0;i<size;i++)f(self[i]);}
 };
 
 int main()
-{array<int>(1,5,347,2).out();}
+{
+ array<int>test(5,3,1,1);
+ test([](int&i){i++;});
+ test([](int&i){printf("%d\n",i);})
+ 
+ return 0;
+}
