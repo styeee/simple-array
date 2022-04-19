@@ -5,8 +5,8 @@
 class array
 {
 protected:
- t*self;
- size_t size;
+ 	t*self;
+ 	size_t size;
 public:
 	array(const size_t size)
 	:
@@ -35,9 +35,9 @@ public:
 
 int main()
 {
- array<int>test(5,3,1,1);
- test([](int&i){i++;});
- test([](int&i){printf("%d\n",i);})
+ 	array<int>test(5,3,1,1);
+ 	test([](int&i){i++;});
+	test([](int&i){printf("%d\n",i);})
  
- return 0;
+ 	return 0;
 }
